@@ -1,18 +1,15 @@
 <config-template xmlns="http://tail-f.com/ns/config/1.0"
                  servicepoint="bridge-domain">
-  <devices xmlns="http://tail-f.com/ns/ncs" foreach="{devices}">
+  <devices xmlns="http://tail-f.com/ns/ncs">
     <device>
-      <name>{device}</name>
+      <name>{/devices/device}</name>
       <config>
         <configuration xmlns="http://xml.juniper.net/xnm/1.1/xnm">
           <bridge-domains>
             <domain>
-              <name>{string(../name)}</name>
-              <description>{../description}</description>
-              <vlan-id>{../id}</vlan-id>
-              <interface>
-                 <name>{interfaces}</name>
-              </interface>
+              <name>{/name}</name>
+              <description>{/device}</description>
+              <vlan-id>{/id}</vlan-id>
             </domain>
           </bridge-domains>
         </configuration>
