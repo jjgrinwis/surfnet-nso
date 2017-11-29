@@ -1,0 +1,67 @@
+module bridge-domain {
+  namespace "http://com/example/bridgedomain";
+  prefix bridge-domain;
+
+  import ietf-inet-types {
+    prefix inet;
+  }
+  import tailf-ncs {
+    prefix ncs;
+  }
+
+  import tailf-common {
+    prefix tailf;
+  }
+
+  import junos {
+    prefix junos;
+  }
+
+  augment /ncs:services {
+
+    list bridge-domain {
+      key name;
+      unique id;
+
+      uses ncs:service-data;
+      ncs:servicepoint "bridge-domain";
+
+      leaf name {
+        type string;
+      }
+
+      leaf id {
+          tailf:info "unique bridge domain id";
+          type int8 {
+            range "10..20";
+          }
+          mandatory true;
+        }
+
+      leaf description {
+        type string {
+          length "1..255";
+        }
+      }
+
+      list devices {
+        tailf:info "list of devices part of this bridge domain";
+        key device;
+        max-elements 2;
+        
+        leaf device {
+          type leafref {
+            path "/ncs:devices/ncs:device/ncs:name";
+          }
+        }
+
+        leaf-list interfaces {
+          min-elements 1;
+          type leafref {
+              path "/ncs:devices/ncs:device[ncs:name=current()/../device]/ncs:config/junos:configuration/junos:interfaces/junos:interface/junos:name";
+          }
+        }
+      }
+    }
+  }
+}
